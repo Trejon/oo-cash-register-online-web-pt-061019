@@ -5,17 +5,17 @@ attr_accessor :total, :discount, :items, :transaction
   def initialize(discount = 0)
     @total = 0
     @discount = discount
-    @items = [ ]
+    @items = []
     @transaction = []
   end 
   
   def add_item(title, price, quantity=1)
     @total += price * quantity
     quantity.times do |item|
-    @items << title 
-    @transaction << @total
+      @items << title 
+    end
+    @transaction << [price, quantity]
   end 
-end 
   
   def apply_discount
     @total = @total - (@total * @discount)/100
@@ -24,14 +24,29 @@ end
     else
       return "There is no discount to apply."
     end
-    
-    def items 
-      @items
-    end 
   end 
   
+    #def items 
+     # @items
+    #end 
+ 
+  
   def void_last_transaction
-    @total = @total - @transaction[@transaction.length - 1]
+    last = @transaction.pop
+    @total = @total - (last[0] * last[1])
+    last[1].times do
+      @items.pop
+      end 
   end 
 end 
+
+cr = CashRegister.new
+cr.add_item("carrots", 2)
+cr.add_item("chips", 3, 2)
+puts cr.total
+puts cr.items
+puts cr.transaction
+cr.void_last_transaction
+puts cr.items 
+puts cr.total
   
